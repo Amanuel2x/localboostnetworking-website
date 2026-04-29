@@ -1,11 +1,11 @@
-import { useEffect, useRef, useState, lazy, Suspense } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import ShaderBackground from '../components/ui/shader-background';
 import { FeatureCard } from '../components/ui/FeatureCard';
 import { MetricsBlock } from '../components/ui/MetricsBlock';
 import { GooeyText } from '../components/ui/GooeyText';
 import { CalendlyEmbed } from '../components/ui/CalendlyEmbed';
 import '../index.css';
 
-const Spline = lazy(() => import('@splinetool/react-spline'));
 
 // ─── LAUNCH BANNER ───────────────────────────────────────────────────────────
 
@@ -99,155 +99,200 @@ function Navbar() {
 // ─── HERO ─────────────────────────────────────────────────────────────────────
 
 function Hero() {
-  const contentRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [muted, setMuted] = useState(true);
+  const [paused, setPaused] = useState(false);
 
-  useEffect(() => {
-    const onScroll = () => {
-      if (!contentRef.current) return;
-      const opacity = 1 - Math.min(window.scrollY / 400, 1);
-      contentRef.current.style.opacity = opacity.toString();
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
+  const toggleMute = () => {
+    if (!videoRef.current) return;
+    videoRef.current.muted = !videoRef.current.muted;
+    setMuted(videoRef.current.muted);
+  };
+
+  const togglePause = () => {
+    const v = videoRef.current;
+    if (!v) return;
+    if (paused) {
+      v.play();
+      setPaused(false);
+    } else {
+      v.pause();
+      v.currentTime = 30;
+      setPaused(true);
+    }
+  };
+
+  const goFullscreen = () => {
+    const v = videoRef.current;
+    if (!v) return;
+    if (v.requestFullscreen) v.requestFullscreen();
+    else if ((v as any).webkitRequestFullscreen) (v as any).webkitRequestFullscreen();
+  };
 
   return (
-    <div className="relative min-h-screen">
-      {/* Spline background */}
-      <div className="absolute inset-0 z-0">
-        <Suspense fallback={<div style={{ width: '100%', height: '100vh', background: 'radial-gradient(ellipse at 50% 40%, rgba(139,92,246,.15) 0%, #000 70%)' }} />}>
-          <Spline
-            scene="https://prod.spline.design/us3ALejTXl6usHZ7/scene.splinecode"
-            style={{ width: '100%', height: '100vh' }}
-          />
-        </Suspense>
-        {/* Edge fades */}
-        <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(to right, rgba(0,0,0,.85), transparent 30%, transparent 70%, rgba(0,0,0,.85)), linear-gradient(to bottom, transparent 50%, rgba(0,0,0,.95))' }} />
-      </div>
+    <section style={{ background: 'transparent', paddingTop: '100px', paddingBottom: '80px', overflow: 'hidden', position: 'relative' }}>
 
-      {/* Content */}
-      <div ref={contentRef} className="absolute inset-0 z-10 pointer-events-none flex items-center">
-        <div className="max-w-6xl mx-auto px-6 w-full">
-          <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 mb-6 px-3 py-1.5 rounded-full text-xs font-semibold tracking-widest uppercase" style={{ background: 'rgba(139,92,246,.12)', border: '1px solid rgba(139,92,246,.3)', color: '#c4b5fd', pointerEvents: 'auto' }}>
-              AI Marketing Intelligence
-            </div>
-            <h1 className="font-black leading-tight mb-6" style={{ fontSize: 'clamp(2.4rem, 5vw, 4rem)', color: '#fff', letterSpacing: '-.03em', lineHeight: 1.1 }}>
-              Your agency's
-              <div style={{ height: 'clamp(3rem, 6vw, 5rem)', position: 'relative', marginTop: '4px' }}>
-                <GooeyText
-                  texts={['AI brain.', 'is awesome.', 'for marketers.']}
-                  morphTime={1.2}
-                  cooldownTime={120}
-                  className="w-full h-full"
-                  style={{
-                    fontSize: 'clamp(2.4rem, 5vw, 4rem)',
-                    fontWeight: 900,
-                    letterSpacing: '-.03em',
-                    color: '#c4b5fd',
-                  }}
-                />
+
+      <div className="max-w-5xl mx-auto px-6 relative z-10 flex flex-col items-center text-center">
+
+        {/* Title */}
+        <h1 className="font-black mb-14" style={{ fontSize: 'clamp(2.6rem, 5.5vw, 4.5rem)', letterSpacing: '-.03em', lineHeight: 1.08, color: '#fff' }}>
+          The platform your agency
+          <div style={{ height: 'clamp(3rem, 6.5vw, 5.5rem)', position: 'relative', marginTop: '4px' }}>
+            <GooeyText
+              texts={["can't work without.", 'runs on.', 'was built for.']}
+              morphTime={0.9}
+              cooldownTime={1.5}
+              className="w-full h-full"
+              style={{ fontSize: 'clamp(2.6rem, 5.5vw, 4.5rem)', fontWeight: 900, letterSpacing: '-.03em', color: '#c4b5fd' }}
+            />
+          </div>
+        </h1>
+
+        {/* Mockup frame with autoplay video */}
+        <div className="w-full relative mb-14" style={{ maxWidth: '720px' }}>
+          {/* Glow behind mockup */}
+          <div style={{ position: 'absolute', bottom: '-60px', left: '50%', transform: 'translateX(-50%)', width: '80%', height: '120px', background: 'radial-gradient(ellipse at center, rgba(139,92,246,.35) 0%, transparent 70%)', pointerEvents: 'none', filter: 'blur(20px)' }} />
+
+          {/* Browser chrome frame */}
+          <div className="relative rounded-2xl overflow-hidden" style={{ border: '1px solid rgba(139,92,246,.25)', boxShadow: '0 0 0 1px rgba(255,255,255,.04), 0 40px 80px rgba(0,0,0,.7), 0 0 80px rgba(139,92,246,.12)', background: '#0d0b1a' }}>
+            {/* Chrome top bar */}
+            <div className="flex items-center gap-2 px-4" style={{ height: 36, background: 'rgba(255,255,255,.04)', borderBottom: '1px solid rgba(255,255,255,.06)' }}>
+              <span style={{ width: 10, height: 10, borderRadius: '50%', background: 'rgba(255,255,255,.12)', display: 'inline-block' }} />
+              <span style={{ width: 10, height: 10, borderRadius: '50%', background: 'rgba(255,255,255,.12)', display: 'inline-block' }} />
+              <span style={{ width: 10, height: 10, borderRadius: '50%', background: 'rgba(255,255,255,.12)', display: 'inline-block' }} />
+              <div className="mx-auto flex items-center gap-2 px-3 py-0.5 rounded" style={{ background: 'rgba(255,255,255,.05)', fontSize: '.65rem', color: 'rgba(255,255,255,.3)', letterSpacing: '.04em' }}>
+                app.vera.localboostnetworking.com
               </div>
-            </h1>
-            <p className="mb-8 leading-relaxed" style={{ fontSize: 'clamp(.95rem, 1.8vw, 1.15rem)', color: 'rgba(255,255,255,.6)', maxWidth: '480px' }}>
-              VERA manages your campaigns, tracks every lead, and delivers AI-powered reports for every client. Built for agencies that run on speed.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-3 pointer-events-auto">
-              <a href="#pricing" className="inline-flex items-center justify-center font-semibold px-7 py-3.5 rounded-full transition-all duration-200 text-sm" style={{ background: '#8b5cf6', color: '#fff', textDecoration: 'none', boxShadow: '0 0 32px rgba(139,92,246,.4)' }}
-                onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = '#7c3aed'; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.background = '#8b5cf6'; }}
-              >
-                Get Access to VERA
-              </a>
-              <a href="#how-it-works" className="inline-flex items-center justify-center gap-2 font-medium px-7 py-3.5 rounded-full text-sm transition-all duration-200" style={{ background: 'rgba(255,255,255,.06)', border: '1px solid rgba(255,255,255,.12)', color: 'rgba(255,255,255,.8)', textDecoration: 'none' }}
-                onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.borderColor = 'rgba(255,255,255,.3)'; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.borderColor = 'rgba(255,255,255,.12)'; }}
-              >
-                See how it works
-              </a>
+            </div>
+
+            {/* Video */}
+            <div className="relative w-full" style={{ aspectRatio: '16/9' }}>
+              <video
+                ref={videoRef}
+                src="/vera-intro.mp4"
+                autoPlay
+                muted
+                loop
+                playsInline
+                className="w-full h-full object-cover"
+                style={{ filter: 'brightness(0.8)' }}
+              />
+
+              {/* Control bar */}
+              <div className="absolute bottom-0 left-0 right-0 flex items-center justify-between px-3 py-2" style={{ background: 'linear-gradient(to top, rgba(0,0,0,.7), transparent)', backdropFilter: 'blur(4px)' }}>
+                {/* Play/Pause */}
+                <button onClick={togglePause} className="flex items-center justify-center rounded-full transition-all duration-150 hover:scale-110" style={{ width: 36, height: 36, background: 'rgba(255,255,255,.12)', border: '1px solid rgba(255,255,255,.15)', cursor: 'pointer', color: '#fff' }} aria-label={paused ? 'Play' : 'Pause'}>
+                  {paused ? (
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                  ) : (
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                  )}
+                </button>
+
+                {/* Right controls */}
+                <div className="flex items-center gap-2">
+                  {/* Mute */}
+                  <button onClick={toggleMute} className="flex items-center justify-center rounded-full transition-all duration-150 hover:scale-110" style={{ width: 36, height: 36, background: 'rgba(255,255,255,.12)', border: '1px solid rgba(255,255,255,.15)', cursor: 'pointer', color: '#fff' }} aria-label={muted ? 'Unmute' : 'Mute'}>
+                    {muted ? (
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 12A4.5 4.5 0 0 0 14 7.97v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51A8.796 8.796 0 0 0 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06A8.99 8.99 0 0 0 17.73 19L19 20.27 20.27 19 5.27 4 4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
+                    ) : (
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 7.97v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+                    )}
+                  </button>
+                  {/* Fullscreen */}
+                  <button onClick={goFullscreen} className="flex items-center justify-center rounded-full transition-all duration-150 hover:scale-110" style={{ width: 36, height: 36, background: 'rgba(255,255,255,.12)', border: '1px solid rgba(255,255,255,.15)', cursor: 'pointer', color: '#fff' }} aria-label="Fullscreen">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2" style={{ color: 'rgba(255,255,255,.25)', animation: 'bounce 2s infinite' }}>
-        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M19 9l-7 7-7-7" /></svg>
-      </div>
-    </div>
-  );
-}
+        {/* Description */}
+        <p className="mb-10 max-w-xl leading-relaxed text-center" style={{ fontSize: 'clamp(.95rem, 1.8vw, 1.15rem)', color: 'rgba(255,255,255,.55)' }}>
+          VERA manages your campaigns, tracks every lead, and delivers AI-powered reports for every client. Built for agencies that run on speed.
+        </p>
 
-// ─── INTEGRATION LOGOS ────────────────────────────────────────────────────────
-
-function IntegrationBar() {
-  const integrations = [
-    { name: 'Meta Ads',         img: '/integration-meta.jpg',     bg: '#ffffff' },
-    { name: 'Google Ads',       img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/120px-Google_%22G%22_logo.svg.png', bg: '#ffffff' },
-    { name: 'GoHighLevel',      img: '/integration-ghl.jpg',      bg: '#0f1e2e' },
-    { name: 'Stripe',           img: '/integration-stripe.png',   bg: '#635bff' },
-    { name: 'Fathom AI',        img: '/integration-fathom.png',   bg: '#000000' },
-    { name: 'Calendly',         img: '/integration-calendly.png', bg: '#ffffff' },
-    { name: 'Instagram',        img: 'https://cdn-icons-png.flaticon.com/512/174/174855.png', bg: '#e1306c' },
-    { name: 'YouTube',          img: 'https://cdn-icons-png.flaticon.com/512/1384/1384060.png', bg: '#ff0000' },
-    { name: 'Zapier',           img: '/integration-zapier.png',   bg: '#ffffff' },
-    { name: 'Slack',            img: 'https://cdn-icons-png.flaticon.com/512/2111/2111615.png', bg: '#4a154b' },
-    { name: 'Google Analytics', img: 'https://cdn-icons-png.flaticon.com/512/2702/2702602.png', bg: '#ffffff' },
-    { name: 'WhatsApp',         img: 'https://cdn-icons-png.flaticon.com/512/733/733585.png', bg: '#25d366' },
-  ];
-
-  const octagon = "polygon(25% 0%, 75% 0%, 100% 25%, 100% 75%, 75% 100%, 25% 100%, 0% 75%, 0% 25%)";
-
-  return (
-    <section style={{ padding: '80px 0', background: 'rgba(255,255,255,.015)', borderTop: '1px solid rgba(255,255,255,.06)', borderBottom: '1px solid rgba(255,255,255,.06)' }}>
-      <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
-
-        {/* Left */}
-        <div>
-          <div className="inline-block mb-4 px-3 py-1 rounded-full text-xs font-semibold tracking-widest uppercase" style={{ background: 'rgba(139,92,246,.1)', border: '1px solid rgba(139,92,246,.2)', color: '#c4b5fd' }}>Integrations</div>
-          <h2 className="font-black mb-4" style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', color: '#f0f0f5', letterSpacing: '-.03em', lineHeight: 1.1 }}>
-            Your whole stack, connected.
-          </h2>
-          <p style={{ color: 'rgba(255,255,255,.45)', lineHeight: 1.75, fontSize: '.95rem', marginBottom: '28px', maxWidth: '400px' }}>
-            VERA plugs directly into the tools agencies already run. Live data flows in automatically — no CSV exports, no manual updates.
-          </p>
-          <a
-            href="#pricing"
-            style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: '#8b5cf6', color: '#fff', fontWeight: 700, fontSize: '.85rem', padding: '12px 24px', borderRadius: '8px', textDecoration: 'none', boxShadow: '0 0 24px rgba(139,92,246,.35)', transition: 'background .2s' }}
-            onMouseEnter={e => (e.currentTarget.style.background = '#7c3aed')}
-            onMouseLeave={e => (e.currentTarget.style.background = '#8b5cf6')}
+        {/* CTAs */}
+        <div className="flex flex-col sm:flex-row gap-3">
+          <a href="#pricing" className="inline-flex items-center justify-center font-semibold px-7 py-3.5 rounded-full text-sm transition-all duration-200" style={{ background: '#8b5cf6', color: '#fff', textDecoration: 'none', boxShadow: '0 0 32px rgba(139,92,246,.4)' }}
+            onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = '#7c3aed'; }}
+            onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.background = '#8b5cf6'; }}
           >
-            Get Access to VERA →
+            Get Access to VERA
+          </a>
+          <a href="#how-it-works" className="inline-flex items-center justify-center gap-2 font-medium px-7 py-3.5 rounded-full text-sm transition-all duration-200" style={{ background: 'rgba(255,255,255,.06)', border: '1px solid rgba(255,255,255,.12)', color: 'rgba(255,255,255,.8)', textDecoration: 'none' }}
+            onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.borderColor = 'rgba(255,255,255,.3)'; }}
+            onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.borderColor = 'rgba(255,255,255,.12)'; }}
+          >
+            See how it works
           </a>
         </div>
 
-        {/* Right — octagon grid */}
-        <div className="grid grid-cols-4 md:grid-cols-6 gap-4">
-          {integrations.map(({ name, img, bg }) => (
+      </div>
+    </section>
+  );
+}
+
+// ─── INTEGRATION MARQUEE ─────────────────────────────────────────────────────
+
+function IntegrationBar() {
+  const integrations = [
+    { name: 'Meta Ads',         img: '/integration-meta.jpg' },
+    { name: 'Google Ads',       img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/120px-Google_%22G%22_logo.svg.png' },
+    { name: 'GoHighLevel',      img: '/integration-ghl.jpg' },
+    { name: 'Stripe',           img: '/integration-stripe.png' },
+    { name: 'Fathom AI',        img: '/integration-fathom.png' },
+    { name: 'Calendly',         img: '/integration-calendly.png' },
+    { name: 'Instagram',        img: 'https://cdn-icons-png.flaticon.com/512/174/174855.png' },
+    { name: 'YouTube',          img: 'https://cdn-icons-png.flaticon.com/512/1384/1384060.png' },
+    { name: 'Zapier',           img: '/integration-zapier.png' },
+    { name: 'Slack',            img: 'https://cdn-icons-png.flaticon.com/512/2111/2111615.png' },
+    { name: 'Google Analytics', img: 'https://cdn-icons-png.flaticon.com/512/2702/2702602.png' },
+    { name: 'WhatsApp',         img: 'https://cdn-icons-png.flaticon.com/512/733/733585.png' },
+  ];
+
+  // Duplicate for seamless loop
+  const items = [...integrations, ...integrations];
+
+  return (
+    <section style={{ padding: '72px 0', borderTop: '1px solid rgba(255,255,255,.06)', borderBottom: '1px solid rgba(255,255,255,.06)', overflow: 'hidden' }}>
+
+      {/* Header */}
+      <div className="text-center mb-10">
+        <div className="inline-block mb-3 px-3 py-1 rounded-full text-xs font-semibold tracking-widest uppercase" style={{ background: 'rgba(139,92,246,.1)', border: '1px solid rgba(139,92,246,.2)', color: '#c4b5fd' }}>Integrations</div>
+        <h2 className="font-black" style={{ fontSize: 'clamp(1.6rem, 3vw, 2.4rem)', color: '#f0f0f5', letterSpacing: '-.03em' }}>
+          Your whole stack, connected.
+        </h2>
+        <p style={{ color: 'rgba(255,255,255,.4)', fontSize: '.9rem', marginTop: '10px' }}>
+          VERA plugs into the tools agencies already run — live data, no manual updates.
+        </p>
+      </div>
+
+      {/* Marquee track */}
+      <div style={{ position: 'relative' }}>
+        {/* Fade edges */}
+        <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: '120px', background: 'linear-gradient(to right, #05050a, transparent)', zIndex: 2, pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', right: 0, top: 0, bottom: 0, width: '120px', background: 'linear-gradient(to left, #05050a, transparent)', zIndex: 2, pointerEvents: 'none' }} />
+
+        <div style={{ display: 'flex', animation: 'marquee 28s linear infinite' }}>
+          {items.map(({ name, img }, i) => (
             <div
-              key={name}
+              key={`${name}-${i}`}
               title={name}
-              style={{
-                width: 56,
-                height: 56,
-                background: bg,
-                clipPath: octagon,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                overflow: 'hidden',
-                cursor: 'default',
-                transition: 'transform .2s',
-              }}
-              onMouseEnter={e => ((e.currentTarget as HTMLDivElement).style.transform = 'scale(1.12)')}
-              onMouseLeave={e => ((e.currentTarget as HTMLDivElement).style.transform = 'scale(1)')}
+              style={{ flexShrink: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px', padding: '0 36px' }}
             >
-              {img && <img src={img} alt={name} style={{ width: '65%', height: '65%', objectFit: 'contain' }} />}
+              <div style={{ width: 64, height: 64, borderRadius: '16px', background: 'rgba(255,255,255,.06)', border: '1px solid rgba(255,255,255,.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '12px' }}>
+                <img src={img} alt={name} style={{ width: '100%', height: '100%', objectFit: 'contain', filter: 'brightness(0.9)' }} />
+              </div>
+              <span style={{ fontSize: '.65rem', fontWeight: 600, color: 'rgba(255,255,255,.3)', letterSpacing: '.06em', textTransform: 'uppercase', whiteSpace: 'nowrap' }}>{name}</span>
             </div>
           ))}
         </div>
-
       </div>
+
     </section>
   );
 }
@@ -569,7 +614,11 @@ export default function Vera() {
   }, []);
 
   return (
-    <div style={{ background: '#05050a', minHeight: '100vh' }}>
+    <div style={{ background: '#05050a', minHeight: '100vh', position: 'relative', isolation: 'isolate' }}>
+      <ShaderBackground />
+      {/* Dark overlay to dim shader */}
+      <div style={{ position: 'fixed', inset: 0, zIndex: 0, background: 'rgba(5,5,10,0.68)', pointerEvents: 'none' }} />
+      <div style={{ position: 'relative', zIndex: 1 }}>
       <LaunchBanner />
       <Navbar />
       <Hero />
@@ -581,6 +630,7 @@ export default function Vera() {
       <Pricing />
       <WhiteLabelCTA />
       <Footer />
+      </div>
     </div>
   );
 }
