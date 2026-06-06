@@ -5,12 +5,12 @@ import {
 } from '@/components/ui/animated-slideshow';
 
 const SLIDES = [
-  { id: 'cover', title: 'LOCAL BOOST', imageUrl: '/lbn-logo.png' },
-  { id: 'roofing', title: 'ROOFING', imageUrl: '/case-studies/case-4.png' },
-  { id: 'pool', title: 'POOL', imageUrl: '/case-studies/case-1.png' },
-  { id: 'insulation', title: 'INSULATION', imageUrl: '/case-studies/case-2.png' },
-  { id: 'water', title: 'WATER SYSTEMS', imageUrl: '/case-studies/case-3.png' },
-  { id: 'solar', title: 'SOLAR', imageUrl: '/case-studies/case-5.png' },
+  { id: 'cover', title: 'LOCAL BOOST', imageUrl: '/lbn-logo.png', alt: 'Local Boost Networking logo' },
+  { id: 'roofing', title: 'ROOFING', imageUrl: '/case-studies/case-4.png', alt: 'Roofing client Google Ads case study showing $1,267.60 ad spend, $20,412 revenue, 16.11 ROAS' },
+  { id: 'pool', title: 'POOL', imageUrl: '/case-studies/case-1.png', alt: 'Pool company Meta Ads case study showing $38,609 ad spend, $790,800 revenue, 20.49 ROAS over 2 years' },
+  { id: 'insulation', title: 'INSULATION', imageUrl: '/case-studies/case-2.png', alt: 'Insulation and rodent company Meta Ads case study showing $71,895 ad spend, $559,453 revenue, 7.78 ROAS' },
+  { id: 'water', title: 'WATER SYSTEMS', imageUrl: '/case-studies/case-3.png', alt: 'Water systems company Google Ads case study showing $6,673 ad spend, $23,331 revenue, 3.50 ROAS' },
+  { id: 'solar', title: 'SOLAR', imageUrl: '/case-studies/case-5.png', alt: 'Solar company Meta Ads case study showing $4,969 ad spend, $30,000 revenue, 6.04 ROAS' },
 ];
 
 export default function CaseStudies() {
@@ -59,7 +59,7 @@ export default function CaseStudies() {
                     index={index}
                     imageUrl={slide.imageUrl}
                     src={slide.imageUrl}
-                    alt={slide.title}
+                    alt={slide.alt}
                     className="absolute inset-0 h-full w-full object-contain"
                     style={index === 0 ? { padding: '12%' } : undefined}
                     loading="eager"

@@ -105,40 +105,38 @@ function HomeFooter() {
 
 export default function Home() {
   useEffect(() => {
-    document.title = 'Local Boost Networking';
-    const link = document.querySelector<HTMLLinkElement>("link[rel~='icon']") || document.createElement('link');
-    link.rel = 'icon';
-    link.type = 'image/png';
-    link.href = '/lbn-logo.png';
-    document.head.appendChild(link);
+    document.title = 'Local Boost Networking | Lead Generation for Home Service Businesses';
   }, []);
 
   return (
     <div style={{ background: '#020617', minHeight: '100vh', fontFamily: "'Outfit', sans-serif", color: '#f0f0f5' }}>
-      <Navbar1 />
-      <HomeHero />
-      <PageShaderBg>
-        <div id="results" style={{ scrollMarginTop: '96px' }}><HomeStats /></div>
-        <div id="services" style={{ scrollMarginTop: '96px' }}><HomeServices /></div>
-        <div id="case-studies" style={{ scrollMarginTop: '96px' }}><CaseStudies /></div>
-        <a
-          href="https://calendly.com/amanuel-localboostnetworking/marketing"
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{ display: 'block', textDecoration: 'none', cursor: 'pointer' }}
-        >
-          <Testimonial
-            companyLogo="/lbn-logo.png"
-            quote="We built Local Boost Networking to do one thing. Get home service companies more calls than they can handle."
-            highlightedText="Local Boost Networking"
-            authorName="Amanuel Abu"
-            authorPosition="Founder and CEO"
-            authorImage="/amanuel-headshot.png"
-          />
-        </a>
-        <HomeCalendarCTA />
-        <HomeFooter />
-      </PageShaderBg>
+      <header><Navbar1 /></header>
+      <main>
+        <HomeHero />
+        <PageShaderBg>
+          <section id="results" aria-label="Real Results" style={{ scrollMarginTop: '96px' }}><HomeStats /></section>
+          <section id="services" aria-label="What We Handle" style={{ scrollMarginTop: '96px' }}><HomeServices /></section>
+          <section id="case-studies" aria-label="Case Studies" style={{ scrollMarginTop: '96px' }}><CaseStudies /></section>
+          <a
+            href="https://calendly.com/amanuel-localboostnetworking/marketing"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Book a free strategy call with Amanuel Abu, Founder and CEO of Local Boost Networking"
+            style={{ display: 'block', textDecoration: 'none', cursor: 'pointer' }}
+          >
+            <Testimonial
+              companyLogo="/lbn-logo.png"
+              quote="We built Local Boost Networking to do one thing. Get home service companies more calls than they can handle."
+              highlightedText="Local Boost Networking"
+              authorName="Amanuel Abu"
+              authorPosition="Founder and CEO"
+              authorImage="/amanuel-headshot.png"
+            />
+          </a>
+          <HomeCalendarCTA />
+        </PageShaderBg>
+      </main>
+      <footer><HomeFooter /></footer>
     </div>
   );
 }

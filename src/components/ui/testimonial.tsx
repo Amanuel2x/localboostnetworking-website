@@ -37,7 +37,7 @@ export const Testimonial = React.forwardRef<HTMLDivElement, TestimonialProps>(
           <div className="flex flex-col items-center">
             {companyLogo && (
               <div className="mb-7 relative h-12 w-32">
-                <img src={companyLogo} alt="Company logo" className="h-full w-full object-contain" />
+                <img src={companyLogo} alt="Local Boost Networking" className="h-full w-full object-contain" />
               </div>
             )}
             <p
