@@ -1,1 +1,7 @@
+# Send the old in-repo Vera landing to the current Vera marketing site.
+# Must come BEFORE the SPA catch-all — Cloudflare matches top to bottom.
+/vera     https://verahq.ai/  301
+/vera/*   https://verahq.ai/  301
+
+# SPA fallback — every other path serves the React app.
 /* /index.html 200
