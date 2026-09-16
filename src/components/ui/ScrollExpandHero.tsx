@@ -210,30 +210,20 @@ export default function ScrollExpandHero({
               {title && (
                 <div className="flex flex-col items-center justify-center text-center gap-3 w-full relative z-10">
                   <h1
-                    className="font-black"
+                    className="font-black flex flex-col items-center gap-3"
                     style={{
                       fontSize: 'clamp(2.8rem, 6vw, 5.5rem)',
-                      color: '#fff',
                       letterSpacing: '-.03em',
                       lineHeight: 1.05,
-                      transform: `translateX(-${textSlide}vw)`,
                       textShadow: '0 2px 40px rgba(0,0,0,0.6)',
                     }}
                   >
-                    {firstWord}
-                  </h1>
-                  <h1
-                    className="font-black"
-                    style={{
-                      fontSize: 'clamp(2.8rem, 6vw, 5.5rem)',
-                      color: '#f0f0f5',
-                      letterSpacing: '-.03em',
-                      lineHeight: 1.05,
-                      transform: `translateX(${textSlide}vw)`,
-                      textShadow: '0 2px 40px rgba(0,0,0,0.6)',
-                    }}
-                  >
-                    {rest}
+                    <span style={{ color: '#fff', transform: `translateX(-${textSlide}vw)` }}>
+                      {firstWord}
+                    </span>
+                    <span style={{ color: '#f0f0f5', transform: `translateX(${textSlide}vw)` }}>
+                      {rest}
+                    </span>
                   </h1>
                 </div>
               )}

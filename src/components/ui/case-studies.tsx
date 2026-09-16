@@ -62,7 +62,7 @@ export default function CaseStudies() {
                     alt={slide.alt}
                     className="absolute inset-0 h-full w-full object-contain"
                     style={index === 0 ? { padding: '12%' } : undefined}
-                    loading="eager"
+                    loading={index === 0 ? 'eager' : 'lazy'}
                     decoding="async"
                   />
                 ))}
