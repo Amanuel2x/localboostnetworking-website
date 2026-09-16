@@ -106,6 +106,9 @@ function HomeFooter() {
 export default function Home() {
   useEffect(() => {
     document.title = 'Local Boost Networking | Lead Generation for Home Service Businesses';
+    // Client-side nav back from a legal page must restore the homepage canonical.
+    const c = document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
+    if (c) c.href = 'https://localboostnetworking.com/';
   }, []);
 
   return (

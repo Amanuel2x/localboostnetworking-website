@@ -1,4 +1,7 @@
+import { usePageMeta } from '../lib/usePageMeta';
+
 export default function PrivacyPolicy() {
+  usePageMeta('Privacy Policy | Local Boost Networking', '/privacy-policy');
   return (
     <div style={{ background: '#030712', minHeight: '100vh', color: '#f0f0f5', fontFamily: 'sans-serif' }}>
       <div style={{ maxWidth: '760px', margin: '0 auto', padding: '100px 28px 80px' }}>
