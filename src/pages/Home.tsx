@@ -77,13 +77,13 @@ function HomeFooter() {
         logo={<img src="/lbn-logo.png" alt="Local Boost Networking" className="h-10 w-10 rounded" />}
         brandName="Local Boost Networking"
         socialLinks={[
-          { icon: <Linkedin className="h-5 w-5" />, href: '#', label: 'LinkedIn' },
-          { icon: <Instagram className="h-5 w-5" />, href: '#', label: 'Instagram' },
-          { icon: <Facebook className="h-5 w-5" />, href: '#', label: 'Facebook' },
+          { icon: <Linkedin className="h-5 w-5" />, href: 'https://www.linkedin.com/company/local-boost-networking', label: 'LinkedIn' },
+          { icon: <Instagram className="h-5 w-5" />, href: 'https://www.instagram.com/localboostnetworking', label: 'Instagram' },
+          { icon: <Facebook className="h-5 w-5" />, href: 'https://www.facebook.com/profile.php?id=61584565057880', label: 'Facebook' },
         ]}
         mainLinks={[
           { href: 'https://veramarketing.ai', label: 'VERA' },
-          { href: 'https://veramarketing.ai', label: 'Client Access' },
+          { href: 'https://clients.localboostnetworking.com/login', label: 'Client Login' },
           { href: 'mailto:contact@localboostnetworking.com', label: 'Contact' },
           { href: 'tel:+14159064200', label: '(415) 906-4200' },
         ]}
